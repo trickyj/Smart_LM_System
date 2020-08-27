@@ -1,0 +1,20 @@
+{% extends 'S_LMS/base.html' %}
+
+
+{% block content %}
+
+
+
+<body>
+    <!-- Header -->
+    <div class="w3-green w3-display-container w3-animate-opacity">
+    <header class="w3-container w3-center" style="padding:200px 16px" id="home">
+    <h1 class="w3-margin w3-jumbo">Home Page</h1>
+    <p class="w3-xlarge">Welcome to the Leave Management System</p>
+    <p class="w3-large">Name of Employee: {{employees.First_Name}} {{employees.Last_Name}}</p>
+    <p class="w3-large">Designation : {{employees.Designation}}</p>
+    <!--button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Get Started</button-->
+    </header>
+    </div>
+</body>
+ {% endblock %}
