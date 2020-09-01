@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+{% block content %}
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -19,12 +20,11 @@
 
 <h1> My_Profile </h1>
 <div class="myprofile">
-    {% for Employee in employees %}
+    
 
         <div class="myprofile">
-           <h2><a href="#"> {{ Employee.First_Name }}</a> </h2> 
+           <h2><a href="#"> {{ user.first_name }} </a> </h2> 
         </div>   
-    {% endfor %}
 
     </div>
     <!-- Profile Content -->
@@ -41,17 +41,17 @@
                             <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
                                 <div class="w3-half">
                                     <p class="w3-small">First Name </p>
-                                    <input class="w3-input w3-border" type="text" placeholder="First Name" required name="First Name" value='{{Employee.First_Name}}' readonly>
+                                    <input class="w3-input w3-border" type="text" placeholder="First Name" required name="First Name" value='{{ user.first_name }}' readonly>
                                 </div>
                                 <div class="w3-half">
                                     <p class="w3-small">Last Name</p>
-                                    <input class="w3-input w3-border" type="text" placeholder="Last Name" required name="Last Name" value='{{Employee.Last_Name}}' readonly>
+                                    <input class="w3-input w3-border" type="text" placeholder="Last Name" required name="Last Name" value='{{ user.last_name }}' readonly>
                                 </div>
                             </div>
                             <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
                                 <div class="w3-half">
                                     <p class="w3-small">Street Address Line 1</p>
-                                    <input class="w3-input w3-border" type="text" placeholder="Street Address" required name="Street Address" value='{{employee.Street_Address}}' readonly>
+                                    <input class="w3-input w3-border" type="text" placeholder="Street Address" required name="Street Address" value='{{user.Street_Address}}' readonly>
                                 </div>
                                 <div class="w3-half">
                                     <p class="w3-small">Street Address Line 2</p>
@@ -107,4 +107,5 @@
 </body>
 </html>
 
+{% endblock %}
 
