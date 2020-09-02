@@ -14,6 +14,8 @@ def index(request):
 	else:
 		return render(request, 'S_LMS/index.html')
 
+# This below code loads the home page and display the logged in users data. User ID, name, picture and email.
+
 @login_required
 def dashboard(request):
     user = request.user
@@ -25,10 +27,12 @@ def dashboard(request):
         'email': auth0user.extra_data['email']
     }
 
-    return render(request, 'S_LMS/dashboard.html', {
+    return render(request, 'S_LMS/home.html', {
         'auth0User': auth0user,
         'userdata': json.dumps(userdata, indent=4)
     })
+
+# this below given code will logout the user. 
 
 def logout(request):
     log_out(request)
@@ -37,5 +41,30 @@ def logout(request):
                  (settings.SOCIAL_AUTH_AUTH0_DOMAIN, settings.SOCIAL_AUTH_AUTH0_KEY, return_to)
     return HttpResponseRedirect(logout_url)
 
-def profiles(request):
-    return render (request, 'S_LMS/profile.html')
+#this below given code will load the users profile details.
+
+@login_required
+def profile(request):
+    user = request.user
+    auth0user = user.social_auth.get(provider='auth0')
+    userdata = {
+        'user_id': auth0user.uid,
+        'name': user.first_name,
+        'picture': auth0user.extra_data['picture'],
+        'email': auth0user.extra_data['email']
+    }
+
+    return render(request, 'S_LMS/profile.html', {
+        'auth0User': auth0user,
+        'userdata': json.dumps(userdata, indent=4)
+    })
+
+#def profiles(request):
+ #   return render (request, 'S_LMS/profile.html')
+
+def handler404(request, *args, **argv):
+    return render(request, '404.html', status=404)
+
+
+def handler500(request, *args, **argv):
+    return render(request, '500.html', status=500)
