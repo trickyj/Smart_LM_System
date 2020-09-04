@@ -1,0 +1,242 @@
+{% extends 'S_LMS/base.html' %}
+{% block content %}
+
+<body>
+<div class="w3-container w3-light-gray w3-center" style="padding: 100px 200px ;" id="applyforleave">
+    <div>
+        <h1>Apply For Leave</h1>
+            <div>
+            <p><button class="w3-btn w3-black w3-col s6 w3-green w3-center w3-padding 180px 1/2px" onclick="openLeave('Request Leave')"> Request Leave </button></p>
+            <p><button class="w3-btn w3-black w3-col s6 w3-green w3-center w3-padding 180px 1/2px" onclick="openLeave('Leave History')"> Leave History </button></p>
+            </div>
+                            <!-- <p class="w3-small">Absence Type</p> -->
+                            <!-- <input class="w3-input w3-border" type="text" placeholder="Absence Type" name="Absence Type" required> -->
+            <div class="w3-row w3-padding-32 RequestLeave" id="Request Leave">
+                <h4>Request Leave</h4>
+                <form class="w3-container w3-margin-top w3-card-4" action="ApplyForLeave"  method="post">{% csrf_token %}
+                                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                                        <div class="w3-half">
+                                            <p class="w3-small"> Leave Type </p>
+                                            <select class="w3-select" name="leaveOption" onChange="getAvailableDays(this.options[this.selectedIndex].value)">
+                                                <option value="" disabled selected>Choose Leave Type</option>
+                                                <option value="Personal">Personal</option>
+                                                <option value="Annual">Annual</option>
+                                                <option value="Military">Military</option>
+                                                {% if gender == 'F' %}
+                                                <option value="PDL">Pregnancy Disability</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="w3-row-padding w3-left " name="holidays" style="margin:0 -16px 8px -16px">
+                                        <div>
+                                            <p class="w3-medium" >Upcoming Holidays</p>
+                                            <ul>
+                                                <li>Dec 24 2018 - Christmas Eve</li>
+                                                <li>Dec 25 2018 - Christmas Day</li>
+                                                <li>Dec 31 2018 - New Year's Eve</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                                        <div class="w3-half">
+                                            <p class="w3-small"><label> <i class="fa fa-calendar-check-o"></i> Begin Date </label></p>
+                                            <input class="w3-input w3-border" type="date" placeholder="YYYY MM DD" name="BeginDate" id="startDate">
+                                        </div>
+                                    </div>
+                                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                                        <div class="w3-half">
+                                            <p class="w3-small"><label> <i class="fa fa-calendar-check-o"></i> End Date </label></p>
+                                            <input class="w3-input w3-border" type="date" placeholder="YYYY MM DD" name="EndDate" required id="endDate" onchange="getRequestedDays()">
+                                        </div>
+                                    </div>
+                                    <div class="w3-row-padding" name="availableDays" id="availableDays" style="margin:0 -16px 8px -16px">
+                                        <div class="w3-half">
+                                            <p class="w3-small" >Available Days :</p>
+                                            <input class="w3-input w3-border"value='{{leave_balance.Available_Days}}' readonly id="txtavailableDays">
+                                        </div>
+                                    </div>
+                                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                                        <div class="w3-half">
+                                            <p class="w3-small">Requesting Days :</p>
+                                            <input class="w3-input w3-border" id="requestedDays" type="number" value="1" name="Days" min="1" max="100" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
+                                        <div class="w3-full">
+                                            <p class="w3-small">Reason/Comments</p>
+                                            <input class="w3-input w3-border" type="text" placeholder="Add Comments" id="Reason" name="Reason">
+                                        </div>
+                                    </div><button onclick="return checkErrors()" class="w3-button w3-black w3-section w3-left" type="submit">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+            <!-- Leave History -->
+            <div class="w3-container w3-light-gray">
+                <div class="w3-row w3-padding-32 RequestLeave" id="Leave History" style="display:none">
+                    <div class="w3-container w3-light-gray w3-center" style="padding: 1px 200px">
+                        <div class="w3-container" >
+                            <h4>Leave History</h4>
+                            <table class="w3-table-all" action="LeaveHistory"  method="post">{% csrf_token %}
+                                
+
+                                <thead>
+                                <tr class="w3-blue">
+                                    <th>Absence Type</th>
+                                    <th>Begin Date</th>
+                                    <th>End Date</th>
+                                    <th>Requested Days</th>
+                                    <th>Request Status</th>
+                                    <th>Cancel Leave</th>
+
+                                    {% for leaves in leavesArray %}
+
+                                <tr>
+                                    <td>{{leaves.Leave_Type}}</td>
+                                    <td>{{leaves.Begin_Date}}</td>
+                                    <td>{{leaves.End_Date}}</td>
+                                    <td>{{leaves.Requested_Days}}</td>
+                                    <td>{{leaves.Leave_Status}}</td>
+                                <form class="w3-container w3-margin-top w3-card-4" action="ApplyForLeave"  method="post">{% csrf_token %}
+                                        
+                                         
+                                        <td><input type="submit" style="display:{{leaves.Display}};" formaction="ApplyForLeave?cancelLeave={{leaves.Leave_Id}}" value="Cancel"/></td>
+                                    </form>
+                                </tr>
+                                </thead>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+function openLeave(leave) {
+    var x = document.getElementsByClassName("RequestLeave");
+    if(leave === 'Leave History') {
+        document.getElementById('Leave History').style.display = "block";
+        document.getElementById('Request Leave').style.display = "none";
+    } else {
+        document.getElementById('Leave History').style.display = "none";
+        document.getElementById('Request Leave').style.display = "block";
+    }
+}
+
+function getAvailableDays(leaveType) {
+
+    $.ajax({
+        url: "ApplyForLeave?LeaveType="+leaveType,
+        success: function(data){
+
+         $('#availableDays').html(jQuery(data).find('#availableDays').html());
+
+        },/*./success*/
+        error: function(xhr, status, error) {
+
+        }/*  end of error */
+    });
+}
+
+function getRequestedDays() {
+    var start = document.getElementById("startDate").value
+    var end = document.getElementById("endDate").value
+    var holidayArray2013 = ['2018-12-24', '2018-12-25','2018-12-31'];
+    var startDate = new Date(start + ' 00:00:00 PST');
+    var endDate = new Date(end + ' 00:00:00 PST');
+    var curDate = startDate;
+    var count = 0
+    while (curDate < endDate) {
+        var dayOfWeek = curDate.getDay();
+        var isWeekend = (dayOfWeek == 6) || (dayOfWeek == 0);
+        debugger;
+        if(isWeekend || $.inArray(curDate.toISOString().slice(0,10), holidayArray2013) > -1)
+            count--
+        count++;
+        curDate.setDate(curDate.getDate() + 1)
+    }
+    document.getElementById("requestedDays").value = count;
+}
+
+
+function checkErrors() {
+    var listErrors = []
+    var startDate = document.getElementById("startDate").value
+    var date1 = new Date(startDate);
+
+    if(startDate == "") {
+        listErrors.push("Start date can not be null");
+    } else {
+
+        var today = new Date();
+        today.setHours(0,0,0,0);
+        if(date1 < today) {
+            listErrors.push("Start date can not be less than today's date.");
+        }
+    }
+
+    var endDate = document.getElementById("endDate").value
+    if(endDate == "") {
+        listErrors.push("End date can not be null");
+    } else {
+        var date2 = new Date(endDate);
+        if(date2 < date1) {
+            listErrors.push("End date can not be less than start date.");
+        }
+    }
+
+    var availableDays = document.getElementById("txtavailableDays").value
+    var requestedDays = document.getElementById("requestedDays").value
+    if(parseInt(availableDays) < parseInt(requestedDays)){
+        listErrors.push("Leave limit exceeded.");
+    }
+
+    var arrayLength = listErrors.length;
+
+    if(arrayLength == 0) {
+        //alert("request submitted successfully");
+        toastr.success('request submitted successfully')
+        return true;
+    } else {
+        for (var i = 0; i < arrayLength; i++) {
+        toastr.error(listErrors[i]);
+        //Do something
+        }
+
+        return false;
+    }
+
+
+}
+
+toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "500",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+
+
+</script>
+{% endblock %}
+
+

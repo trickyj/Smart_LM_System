@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
 	path('',views.index, name='index'),
@@ -7,7 +8,8 @@ urlpatterns = [
 	path('logout', views.logout),
 	path('', include('django.contrib.auth.urls')),
 	path('', include('social_django.urls')),
-	path('profile', views.profile, name='profile')
+	path('profile', views.profile, name='profile'),
+	path('ApplyForLeave', csrf_exempt(views.ApplyForLeave), name='ApplyForLeave'),
 
 
 ]

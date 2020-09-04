@@ -59,8 +59,8 @@ def profile(request):
         'userdata': json.dumps(userdata, indent=4)
     })
 
-#def profiles(request):
- #   return render (request, 'S_LMS/profile.html')
+def ApplyForLeave(request):
+    return render (request, 'S_LMS/ApplyForLeave.html')
 
 def handler404(request, *args, **argv):
     return render(request, '404.html', status=404)
