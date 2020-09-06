@@ -10,6 +10,6 @@ urlpatterns = [
 	path('', include('social_django.urls')),
 	path('profile', views.profile, name='profile'),
 	path('ApplyForLeave', csrf_exempt(views.ApplyForLeave), name='ApplyForLeave'),
-
+	path('ApproveLeave', csrf_exempt(views.ApproveLeave), name='ApproveLeave'),
 
 ]

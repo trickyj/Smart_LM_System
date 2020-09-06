@@ -62,6 +62,9 @@ def profile(request):
 def ApplyForLeave(request):
     return render (request, 'S_LMS/ApplyForLeave.html')
 
+def ApproveLeave(request):
+    return render (request, 'S_LMS/ApproveLeave.html')
+
 def handler404(request, *args, **argv):
     return render(request, '404.html', status=404)
 
