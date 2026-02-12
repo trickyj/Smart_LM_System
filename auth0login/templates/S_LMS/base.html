@@ -28,9 +28,30 @@
         <a href="{% url 'dashboard' %}" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
         <a href="{% url 'profile' %}"class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Profile</a>
         <a href="{% url 'ApplyForLeave' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Apply Leave</a>
-        {% if user.is_staff %}
+        {% if show_leave_notifications %}
         <a href="{% url 'ApproveLeave' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Approve Leave</a>
         <a href="{% url 'LeaveHistory' %}" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Leave History</a>
+        <div class="w3-dropdown-click w3-right">
+          <button onclick="toggleNotifications()" class="w3-button w3-red w3-padding-large" title="Leave Notifications">
+            <i class="fa fa-bell"></i>
+            {% if pending_leave_count > 0 %}
+              <span class="w3-badge w3-small w3-green">{{ pending_leave_count }}</span>
+            {% endif %}
+          </button>
+          <div id="leaveNotificationDropdown" class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; min-width:320px;">
+            {% if pending_leave_count > 0 %}
+              <div class="w3-bar-item"><b>{{ pending_leave_count }} new notification{{ pending_leave_count|pluralize }}</b></div>
+              {% for leave in pending_leave_requests %}
+                <div class="w3-bar-item" style="white-space: normal;">
+                  {{ leave.user.get_full_name|default:leave.user.username }} raised {{ leave.leave_type }} leave ({{ leave.begin_date }} to {{ leave.end_date }})
+                </div>
+              {% endfor %}
+              <a href="{% url 'ApproveLeave' %}" class="w3-bar-item w3-button w3-text-blue">Review and Approve</a>
+            {% else %}
+              <div class="w3-bar-item">No new leave notifications.</div>
+            {% endif %}
+          </div>
+        </div>
         {% endif %}
         <a href="/logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Log Out</a>
      </div>
@@ -142,6 +163,16 @@ First Grid
           x.className += " w3-show";
         } else {
           x.className = x.className.replace(" w3-show", "");
+        }
+      }
+
+      function toggleNotifications() {
+        var dropdown = document.getElementById("leaveNotificationDropdown");
+        if (!dropdown) return;
+        if (dropdown.className.indexOf("w3-show") === -1) {
+          dropdown.className += " w3-show";
+        } else {
+          dropdown.className = dropdown.className.replace(" w3-show", "");
         }
       }
     </script>
