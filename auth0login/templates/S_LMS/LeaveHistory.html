@@ -1,0 +1,74 @@
+{% extends 'S_LMS/base.html' %}
+{% block content %}
+
+<!-- Link external styling similar to Table #07 -->
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'my_style.css' %}">
+
+<section class="ftco-section py-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-10 text-center">
+                <h2 class="heading-section">Leave History</h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <form method="get" class="d-flex flex-wrap justify-content-center gap-3">
+                <label for="user" class="form-label text-white">Filter by User:</label>
+                <select name="user" id="user" class="form-select w-auto" onchange="this.form.submit()">
+                    <option value="">All Users</option>
+                    {% for user in users %}
+                        <option value="{{ user }}" {% if selected_user == user %}selected{% endif %}>{{ user }}</option>
+                    {% endfor %}
+                </select>
+                <noscript><button type="submit" class="btn btn-primary">Filter</button></noscript>
+            </form>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="table-wrap">
+                    <table class="table table-bordered table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Type</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Days</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in leavesArray %}
+                                <tr>
+                                    <td>{{ leave.user.username }}</td>
+                                    <td>{{ leave.leave_type }}</td>
+                                    <td>{{ leave.begin_date|date:"F d, Y" }}</td>
+                                    <td>{{ leave.end_date|date:"F d, Y" }}</td>
+                                    <td>{{ leave.requested_days }}</td>
+                                    <td>{{ leave.reason }}</td>
+                                    <td>
+                                        <span class="badge {% if leave.status == 'Approved' %}bg-success{% elif leave.status == 'Declined' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ leave.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-muted">No leave records found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

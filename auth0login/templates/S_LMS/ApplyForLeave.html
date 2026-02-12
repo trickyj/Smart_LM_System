@@ -4,7 +4,7 @@
 <body>
 <div class="w3-container w3-light-gray w3-center" style="padding: 100px 200px ;" id="applyforleave">
     <div>
-        <h1>Apply For Leave</h1>
+        <h1>APPLY FOR LEAVES</h1>
             <div>
             <p><button class="w3-btn w3-black w3-col s6 w3-green w3-center w3-padding 180px 1/2px" onclick="openLeave('Request Leave')"> Request Leave </button></p>
             <p><button class="w3-btn w3-black w3-col s6 w3-green w3-center w3-padding 180px 1/2px" onclick="openLeave('Leave History')"> Leave History </button></p>
@@ -53,7 +53,7 @@
                                     <div class="w3-row-padding" name="availableDays" id="availableDays" style="margin:0 -16px 8px -16px">
                                         <div class="w3-half">
                                             <p class="w3-small" >Available Days :</p>
-                                            <input class="w3-input w3-border"value='{{leave_balance.Available_Days}}' readonly id="txtavailableDays">
+                                            <input class="w3-input w3-border"value='{{available_days}}' readonly id="txtavailableDays">
                                         </div>
                                     </div>
                                     <div class="w3-row-padding" style="margin:0 -16px 8px -16px">
@@ -75,47 +75,41 @@
             </div>
 
             <!-- Leave History -->
-            <div class="w3-container w3-light-gray">
+            <div class="w3-container w3-light-gray" style="margin-top: 30px;">
                 <div class="w3-row w3-padding-32 RequestLeave" id="Leave History" style="display:none">
                     <div class="w3-container w3-light-gray w3-center" style="padding: 1px 200px">
-                        <div class="w3-container" >
-                            <h4>Leave History</h4>
-                            <table class="w3-table-all" action="LeaveHistory"  method="post">{% csrf_token %}
-                                
-
+                        <div class="w3-container">
+                            <h2>Leave History</h2>
+                            <table class="w3-table-all">
                                 <thead>
-                                <tr class="w3-black">
-                                    <th>Absence Type</th>
-                                    <th>Begin Date</th>
-                                    <th>End Date</th>
-                                    <th>Requested Days</th>
-                                    <th>Request Status</th>
-                                    <th>Cancel Leave</th>
-
-                                    {% for leaves in leavesArray %}
-
-                                <tr>
-                                    <td>{{leaves.Leave_Type}}</td>
-                                    <td>{{leaves.Begin_Date}}</td>
-                                    <td>{{leaves.End_Date}}</td>
-                                    <td>{{leaves.Requested_Days}}</td>
-                                    <td>{{leaves.Leave_Status}}</td>
-                                <form class="w3-container w3-margin-top w3-card-4" action="ApplyForLeave"  method="post">{% csrf_token %}
-                                        
-                                         
-                                        <td><input type="submit" style="display:{{leaves.Display}};" formaction="ApplyForLeave?cancelLeave={{leaves.Leave_Id}}" value="Cancel"/></td>
-                                    </form>
-                                </tr>
+                                    <tr class="w3-blue">
+                                        <th>Absence Type</th>
+                                        <th>Begin Date</th>
+                                        <th>End Date</th>
+                                        <th>Requested Days</th>
+                                        <th>Request Status</th>
+                                    </tr>
                                 </thead>
-                                {% endfor %}
+                                <tbody>
+                                    {% for leave in leave_requests %}
+                                    <tr>
+                                        <td>{{ leave.leave_type }}</td>
+                                        <td>{{ leave.begin_date }}</td>
+                                        <td>{{ leave.end_date }}</td>
+                                        <td>{{ leave.requested_days }}</td>
+                                        <td>{{ leave.status }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5">No leave requests found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>
 
@@ -146,26 +140,50 @@ function getAvailableDays(leaveType) {
     });
 }
 
-function getRequestedDays() {
-    var start = document.getElementById("startDate").value
-    var end = document.getElementById("endDate").value
-    var holidayArray2013 = ['2018-12-24', '2018-12-25','2018-12-31'];
-    var startDate = new Date(start + ' 00:00:00 PST');
-    var endDate = new Date(end + ' 00:00:00 PST');
-    var curDate = startDate;
-    var count = 0
-    while (curDate < endDate) {
-        var dayOfWeek = curDate.getDay();
-        var isWeekend = (dayOfWeek == 6) || (dayOfWeek == 0);
-        debugger;
-        if(isWeekend || $.inArray(curDate.toISOString().slice(0,10), holidayArray2013) > -1)
-            count--
-        count++;
-        curDate.setDate(curDate.getDate() + 1)
-    }
-    document.getElementById("requestedDays").value = count;
-}
+// function getRequestedDays() {
+//     var start = document.getElementById("startDate").value
+//     var end = document.getElementById("endDate").value
+//     var holidayArray2013 = ['2018-12-24', '2018-12-25','2018-12-31'];
+//     var startDate = new Date(start + ' 00:00:00 PST');
+//     var endDate = new Date(end + ' 00:00:00 PST');
+//     var curDate = startDate;
+//     var count = 0
+//     while (curDate < endDate) {
+//         var dayOfWeek = curDate.getDay();
+//         var isWeekend = (dayOfWeek == 6) || (dayOfWeek == 0);
+//         debugger;
+//         if(isWeekend || $.inArray(curDate.toISOString().slice(0,10), holidayArray2013) > -1)
+//             count--
+//         count++;
+//         curDate.setDate(curDate.getDate() + 1)
+//     }
+//     document.getElementById("requestedDays").value = count;
+// }
 
+function getRequestedDays() {
+    var start = document.getElementById("startDate").value;
+    var end = document.getElementById("endDate").value;
+    var holidayArray = ['2023-12-25', '2023-12-31']; // Update dynamically or fetch from the server
+    var startDate = new Date(start);
+    var endDate = new Date(end);
+    var curDate = new Date(startDate);
+    var count = 0;
+
+    if (start && end) {
+        while (curDate <= endDate) {
+            var dayOfWeek = curDate.getDay();
+            var isWeekend = (dayOfWeek === 6) || (dayOfWeek === 0); // Saturday or Sunday
+            var isHoliday = holidayArray.includes(curDate.toISOString().slice(0, 10));
+
+            if (!isWeekend && !isHoliday) {
+                count++;
+            }
+            curDate.setDate(curDate.getDate() + 1);
+        }
+    }
+
+    document.getElementById("requestedDays").value = count > 0 ? count : 0;
+}
 
 function checkErrors() {
     var listErrors = []
@@ -238,5 +256,3 @@ toastr.options = {
 
 </script>
 {% endblock %}
-
-

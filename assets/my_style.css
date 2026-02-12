@@ -53,3 +53,70 @@ a {
 button:hover, a:hover {
   opacity: 0.7;
 }
+
+/* Leave History Table Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #f1f1f1;
+    color: #0f0f0f;
+}
+
+.heading-section {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #8f8e8e;
+    margin-bottom: 2rem;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    background: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #111;
+    color: white;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+tbody tr:hover {
+    background: #d4d4d4;
+}
+
+.badge {
+    padding: 5px 10px;
+    font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.bg-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.bg-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.bg-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+select, label {
+    color: #000;
+}

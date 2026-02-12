@@ -11,5 +11,7 @@ urlpatterns = [
 	path('profile', views.profile, name='profile'),
 	path('ApplyForLeave', csrf_exempt(views.ApplyForLeave), name='ApplyForLeave'),
 	path('ApproveLeave', csrf_exempt(views.ApproveLeave), name='ApproveLeave'),
+    path('LeaveHistory', csrf_exempt(views.LeaveHistory), name='LeaveHistory'),
+
 
 ]

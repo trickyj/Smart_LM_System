@@ -28,7 +28,7 @@ SECRET_KEY = '@fa$z&c3blo-b^#9p4(cso6ee_r9$6n+ph0o6(-z))fcj+mf&)'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.0.103','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['192.168.1.22','127.0.0.1','localhost']
 
 
 # Application definition
@@ -124,7 +124,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -160,3 +159,4 @@ AUTHENTICATION_BACKENDS = {
 
 LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/dashboard'
+LOGOUT_REDIRECT_URL = 'https://dev-3iwe4r9j.us.auth0.com/v2/logout?client_id=7Pg1WGlV6SsQ41l29QXTSz6H2LSI666e&returnTo=http://127.0.0.1:8000/dashboard'
