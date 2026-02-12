@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from .models import LeaveRequest
+from .context_processors import is_leave_approver
 
 from datetime import datetime
 import json
@@ -122,6 +123,7 @@ def profile(request):
     })
 
 
+@login_required
 def ApplyForLeave(request):
     if request.method == 'POST':
         leave_type = request.POST.get('leaveOption')
@@ -167,19 +169,19 @@ def ApplyForLeave(request):
     })
 
 @login_required
-@user_passes_test(is_admin)  # Restrict access to admin users
+@user_passes_test(is_leave_approver)  # Restrict access to leave approvers
 def ApproveLeave(request):
     if request.method == 'POST':
         # Handle approval
         if 'approveList' in request.GET:
             leave_id = request.GET.get('approveList')
-            leave_request = get_object_or_404(LeaveRequest, id=leave_id)
+            leave_request = get_object_or_404(LeaveRequest, id=leave_id, status='Pending')
             leave_request.status = 'Approved'
             leave_request.save()
         # Handle decline
         elif 'declineList' in request.GET:
             leave_id = request.GET.get('declineList')
-            leave_request = get_object_or_404(LeaveRequest, id=leave_id)
+            leave_request = get_object_or_404(LeaveRequest, id=leave_id, status='Pending')
             leave_request.status = 'Declined'
             leave_request.save()
 
