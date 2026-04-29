@@ -1,16 +1,13 @@
 from .models import LeaveRequest
 
-
-LEAVE_APPROVER_USERS = {"vicky", "mounia"}
+LEAVE_APPROVER_GROUP = "LeaveApprovers"
 
 
 def is_leave_approver(user):
     if not user.is_authenticated:
         return False
 
-    username = (user.username or "").strip().lower()
-    first_name = (user.first_name or "").strip().lower()
-    return user.is_staff or username in LEAVE_APPROVER_USERS or first_name in LEAVE_APPROVER_USERS
+    return user.is_staff or user.groups.filter(name=LEAVE_APPROVER_GROUP).exists()
 
 
 def leave_notifications(request):
