@@ -157,7 +157,7 @@ def ApplyForLeave(request):
     leave_requests = LeaveRequest.objects.filter(user=request.user).order_by('-begin_date')
 
     # Calculate available days
-    total_leaves = 10  # Example: Total leaves allocated to the user
+    total_leaves = settings.TOTAL_LEAVE_DAYS
     used_leaves = LeaveRequest.objects.filter(user=request.user).aggregate(Sum('requested_days'))['requested_days__sum'] or 0
     available_days = total_leaves - used_leaves
 

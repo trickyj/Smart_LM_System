@@ -125,6 +125,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Total leave days allocated per user per cycle
+TOTAL_LEAVE_DAYS = 10
+
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)
@@ -160,4 +164,10 @@ AUTHENTICATION_BACKENDS = {
 
 LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/dashboard'
-LOGOUT_REDIRECT_URL = 'https://dev-3iwe4r9j.us.auth0.com/v2/logout?client_id=7Pg1WGlV6SsQ41l29QXTSz6H2LSI666e&returnTo=http://127.0.0.1:8000/dashboard'
+LOGOUT_RETURN_TO = os.environ.get('LOGOUT_RETURN_TO', 'http://127.0.0.1:8000/')
+if SOCIAL_AUTH_AUTH0_DOMAIN and SOCIAL_AUTH_AUTH0_KEY:
+    LOGOUT_REDIRECT_URL = (
+        'https://' + SOCIAL_AUTH_AUTH0_DOMAIN +
+        '/v2/logout?client_id=' + SOCIAL_AUTH_AUTH0_KEY +
+        '&returnTo=' + LOGOUT_RETURN_TO
+    )
